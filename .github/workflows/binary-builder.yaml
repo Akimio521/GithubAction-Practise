@@ -1,3 +1,5 @@
+name: MediaWarp Binary Builder
+
 on:
   workflow_call:
     inputs:
