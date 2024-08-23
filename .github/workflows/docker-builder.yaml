@@ -1,4 +1,5 @@
 name: MediaWarp Docker Builder
+
 on:
   workflow_call:
     inputs:
@@ -12,13 +13,9 @@ on:
         type: boolean
     secrets:
       DOCKERHUB_USERNAME:
-        description: "DockerHub 用户名"
         required: true
-        type: string
       DOCKERHUB_TOKEN:
-        description: "DockerHub Token"
         required: true
-        type: string
 
 env:
   APP_VERSION: ${{ github.event.inputs.APP_VERSION }}

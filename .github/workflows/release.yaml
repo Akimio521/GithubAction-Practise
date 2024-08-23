@@ -29,7 +29,7 @@ jobs:
   docker-builder:
     name: Docker Image Builder
     needs: get-version
-    uses: ./.github/workflows/docker-builder.yaml
+    uses: .github/workflows/docker-builder.yaml
     with:
       APP_VERSION: ${{ needs.get-version.outputs.app_version }}
     secrets:
@@ -39,7 +39,7 @@ jobs:
   binary-builder:
     name: Binary Image Builder
     needs: get-version
-    uses: ./.github/workflows/binary-builder.yaml
+    uses: .github/workflows/binary-builder.yaml
     with:
       APP_VERSION: ${{ needs.get-version.outputs.app_version }}
 

@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       APP_VERSION:
-        description: '用于二进制可执行文件的文件名'
+        description: "用于生成可执行文件的版本号"
         required: true
         type: string
 
