@@ -3,13 +3,22 @@ on:
   workflow_call:
     inputs:
       APP_VERSION:
-        description: '用于Docker镜像版本的标签号'
+        description: "用于Docker镜像版本的标签号"
         required: true
         type: string
       IS_LATEST:
-        description: '是否发布为Docker镜像最新版本'
+        description: "是否发布为Docker镜像最新版本"
         required: true
         type: boolean
+    secrets:
+      DOCKERHUB_USERNAME:
+        description: "DockerHub 用户名"
+        required: true
+        type: string
+      DOCKERHUB_TOKEN:
+        description: "DockerHub Token"
+        required: true
+        type: string
 
 env:
   APP_VERSION: ${{ github.event.inputs.APP_VERSION }}
@@ -19,6 +28,11 @@ jobs:
   docker-builder:
       runs-on: ubuntu-latest
       steps:
+        - name: Show Information
+          run: |
+            echo "Docker镜像版本的标签号：${{ env.APP_VERSION }}"
+            echo "是否发布为Docker镜像最新版本：${{ env.IS_LATEST }}"
+
         - name: Clone Repository
           uses: actions/checkout@v4
 
@@ -28,7 +42,7 @@ jobs:
           with:
             images: ${{ secrets.DOCKERHUB_USERNAME }}/mediawarp
             tags: |
-                type=raw,value=latest,enable=true
+                type=raw,value=latest,enable=IS_LATEST
                 type=raw,value=${{ env.APP_VERSION }},enable=true
 
         - name: Set up QEMU
