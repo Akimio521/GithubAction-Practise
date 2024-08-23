@@ -11,7 +11,7 @@ on:
 env:
   APP_VERSION: ${{ inputs.APP_VERSION }}
   APP_NAME: MediaWarp
-  BINARY_DIR: bin
+  BINARY_DIR: ${{ github.workspace }}/bin
 
 jobs:
   binary-builder:
@@ -46,5 +46,5 @@ jobs:
           uses: actions/upload-artifact@v4
           with:
             name: ${{ env.APP_NAME }}-v${{ env.APP_VERSION }}-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.os == 'windows' && '.exe' || '' }}
-            path: ${{ env.BINARY_DIR }}
+            path: ${{ env.BINARY_DIR }}/${{ env.APP_NAME }}-v${{ env.APP_VERSION }}-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.os == 'windows' && '.exe' || '' }}
 
