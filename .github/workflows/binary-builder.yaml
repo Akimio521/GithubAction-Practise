@@ -9,7 +9,7 @@ on:
         type: string
 
 env:
-  APP_VERSION: ${{ github.event.inputs.APP_VERSION }}
+  APP_VERSION: ${{ inputs.APP_VERSION }}
   APP_NAME: MediaWarp
   BINARY_DIR: bin
 

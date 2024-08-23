@@ -18,8 +18,8 @@ on:
         required: true
 
 env:
-  APP_VERSION: ${{ github.event.inputs.APP_VERSION }}
-  IS_LATEST: ${{ github.event.inputs.IS_LATEST }}
+  APP_VERSION: ${{ inputs.APP_VERSION }}
+  IS_LATEST: ${{ inputs.IS_LATEST }}
 
 jobs:
   docker-builder:
@@ -39,7 +39,7 @@ jobs:
           with:
             images: ${{ secrets.DOCKERHUB_USERNAME }}/mediawarp
             tags: |
-                type=raw,value=latest,enable=IS_LATEST
+                type=raw,value=latest,enable=${{ env.IS_LATEST }}
                 type=raw,value=${{ env.APP_VERSION }},enable=true
 
         - name: Set up QEMU
