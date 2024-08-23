@@ -1,5 +1,4 @@
 name: MediaWarp Docker Builder
-
 on:
   workflow_call:
     inputs:
