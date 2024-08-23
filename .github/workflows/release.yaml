@@ -9,27 +9,29 @@ on:
 
 env:
   APP_NAME: MediaWarp
-  APP_VERSION: "0.0.0"
 
 jobs:
   get-version:
     runs-on: ubuntu-latest
-
+    outputs:
+      app_version: ${{ steps.get-version.outputs.app_version }}
     steps:
       - name: Clone Repository
         uses: actions/checkout@v4
 
       - name: APP Version
+        id: get-version
         run: |
-          echo "APP_VERSION=$(cat core/version.go | sed -ne 's/const\sAPP_VERSION\sstring\s=\s"v\(.*\)"/\1/gp')" >> $GITHUB_ENV
+          APP_VERSION=$(cat core/version.go | sed -ne 's/const\sAPP_VERSION\sstring\s=\s"v\(.*\)"/\1/gp')
           echo "检测到版本号为 $APP_VERSION"
+          echo "::set-output name=app_version::$APP_VERSION"
 
   docker-builder:
     name: Docker Image Builder
     needs: get-version
     uses: ./.github/workflows/docker-builder.yaml
     with:
-      APP_VERSION: ${{ env.APP_VERSION }}
+      APP_VERSION: ${{ needs.get-version.outputs.app_version }}
       IS_LATEST: true
 
   binary-builder:
@@ -37,17 +39,17 @@ jobs:
     needs: get-version
     uses: ./.github/workflows/binary-builder.yaml
     with:
-      APP_VERSION: ${{ env.APP_VERSION }}
+      APP_VERSION: ${{ needs.get-version.outputs.app_version }}
 
   create-release:
     permissions: write-all
     runs-on: ubuntu-latest
-    needs: [ docker-builder, binary-builder ]
+    needs: [ get-version, docker-builder, binary-builder ]
     steps:
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.APP_NAME}}-v${{ env.APP_VERSION}}
+          name: ${{ env.APP_NAME}}-v${{ needs.get-version.outputs.app_version }}
           path: ${{ github.workspace }}/bin
 
       - name: Create Release
